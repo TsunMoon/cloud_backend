@@ -2,14 +2,12 @@ package com.example.demo.controller;
 
 import com.example.demo.dto.*;
 import com.example.demo.entity.Account;
+import com.example.demo.entity.Category;
 import com.example.demo.entity.PhoneAuthorization;
 import com.example.demo.entity.Role;
 import com.example.demo.global.ConstantVariable;
 import com.example.demo.mapper.AccountMapper;
-import com.example.demo.repository.AccountRepository;
-import com.example.demo.repository.PhoneAuthorizationRepository;
-import com.example.demo.repository.ProductRepository;
-import com.example.demo.repository.RoleRepository;
+import com.example.demo.repository.*;
 import com.example.demo.service.ProductService;
 import com.example.demo.service.WelcomeService;
 import org.mapstruct.factory.Mappers;
@@ -42,6 +40,9 @@ public class WelcomeController {
 
     @Autowired
     RoleRepository roleRepository;
+
+    @Autowired
+    CategoryRepository categoryRepository;
 
     @GetMapping(value = "/get_all_product")
     public ProductOutput getAllProductDTOByPaging(@RequestParam("page") int page,
@@ -120,6 +121,20 @@ public class WelcomeController {
             Role _role = new Role();
             _role.setName(roleDTO.getName());
             roleRepository.save(_role);
+
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (Exception ex) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    // Tạo mới category
+    @PostMapping(value = "/create_new_category")
+    public ResponseEntity<HttpStatus> createNewCategory (@RequestBody RoleDTO roleDTO){
+        try {
+            Category _category = new Category();
+            _category.setName(roleDTO.getName());
+            categoryRepository.save(_category);
 
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (Exception ex) {
